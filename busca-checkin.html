@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca e Check-in - Casa Vincular</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Select2 para busca melhorada -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-hands-helping me-2"></i>
+                <span>Casa Vincular</span>
+            </a>
+
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i>
+                        <span id="userNameBusca">Voluntário</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="dashboard.html">
+                                <i class="fas fa-home me-2"></i> Dashboard
+                            </a></li>
+                        <li><a class="dropdown-item" href="cadastro-pessoa.html">
+                                <i class="fas fa-user-plus me-2"></i> Nova Pessoa
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i> Sair
+                            </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <!-- Coluna Esquerda - Busca e Lista -->
+            <div class="col-lg-8">
+                <!-- Cabeçalho -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="h3 mb-1">
+                            <i class="fas fa-search text-primary me-2"></i>
+                            Busca e Check-in
+                        </h1>
+                        <p class="text-muted mb-0">
+                            Busque pessoas para realizar check-in diário
+                        </p>
+                    </div>
+                    <div>
+                        <span class="badge bg-success me-2">
+                            <i class="fas fa-users"></i> <span id="totalPessoas">124</span> cadastradas
+                        </span>
+                        <span class="badge bg-info">
+                            <i class="fas fa-check-circle"></i> <span id="checkinsHoje">24</span> check-ins hoje
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Barra de Busca -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-6">
+                                <label for="busca" class="form-label">
+                                    <i class="fas fa-search me-1"></i> Buscar por nome
+                                </label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="busca"
+                                        placeholder="Digite o nome ou parte dele..." oninput="filtrarPessoas()">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="limparBusca()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="form-text">
+                                    Busca inteligente - digite qualquer parte do nome
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="filtroSituacao" class="form-label">
+                                    <i class="fas fa-filter me-1"></i> Filtrar por situação
+                                </label>
+                                <select class="form-select" id="filtroSituacao" onchange="filtrarPessoas()">
+                                    <option value="">Todas as situações</option>
+                                    <option value="rua">Em situação de rua</option>
+                                    <option value="comunidade">Comunidade local</option>
+                                    <option value="abrigo">Abrigo temporário</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100" onclick="mostrarTodasPessoas()">
+                                    <i class="fas fa-list me-1"></i> Ver Todos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Pessoas -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-users me-2"></i>
+                            Pessoas Cadastradas
+                        </h5>
+                        <div>
+                            <span class="badge bg-light text-dark me-2">
+                                Mostrando: <span id="contagemMostrando">0</span>
+                            </span>
+                            <button class="btn btn-sm btn-outline-primary" onclick="alternarVisualizacao()">
+                                <i class="fas fa-th-list"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="tabelaPessoas">
+                                <thead>
+                                    <tr>
+                                        <th width="40">
+                                            <input type="checkbox" class="form-check-input" id="selectAll"
+                                                onchange="selecionarTodos()">
+                                        </th>
+                                        <th>Nome</th>
+                                        <th>CPF</th>
+                                        <th>Situação</th>
+                                        <th>Último Check-in</th>
+                                        <th width="150">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaPessoas">
+                                    <!-- Dados serão preenchidos via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Mensagem de lista vazia -->
+                        <div id="mensagemVazia" class="text-center py-5 d-none">
+                            <i class="fas fa-users-slash fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Nenhuma pessoa encontrada</h5>
+                            <p class="text-muted">Tente alterar os filtros ou cadastrar uma nova pessoa.</p>
+                            <a href="cadastro-pessoa.html" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-1"></i> Cadastrar Nova Pessoa
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Paginação -->
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    Página <span id="paginaAtual">1</span> de
+                                    <span id="totalPaginas">1</span>
+                                </small>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-secondary me-1" onclick="mudarPagina(-1)" disabled
+                                    id="btnAnterior">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="mudarPagina(1)" disabled
+                                    id="btnProximo">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna Direita - Check-in e Serviços -->
+            <div class="col-lg-4">
+                <!-- Card de Check-in Rápido -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-bolt me-2"></i>
+                            Check-in Rápido
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="selecionadasContainer" class="mb-3 d-none">
+                            <h6 class="mb-2">
+                                <i class="fas fa-user-check me-1"></i>
+                                Pessoas selecionadas: <span id="contadorSelecionadas">0</span>
+                            </h6>
+                            <div id="listaSelecionadas" class="mb-3"></div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-mug-hot me-1"></i> Café da Manhã
+                                </label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="cafeTodos" checked
+                                        onchange="aplicarCafeATodos()">
+                                    <label class="form-check-label" for="cafeTodos">
+                                        Marcar café da manhã para todos
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success w-100" onclick="fazerCheckinMultiplo()">
+                                <i class="fas fa-check-double me-1"></i>
+                                Confirmar Check-in para Selecionados
+                            </button>
+                        </div>
+
+                        <div id="nenhumaSelecionada" class="text-center py-3">
+                            <i class="fas fa-mouse-pointer fa-2x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">
+                                Selecione pessoas na lista ao lado para fazer check-in em lote
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Serviços Adicionais -->
+                <div class="card mb-4" id="cardServicos">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-concierge-bell me-2"></i>
+                            Serviços Adicionais
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="servicosContainer" class="d-none">
+                            <h6 id="nomePessoaServicos" class="mb-3"></h6>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-ticket-alt me-1"></i> Número da Ficha *
+                                </label>
+                                <input type="text" class="form-control" id="numeroFicha" placeholder="Ex: 001"
+                                    maxlength="10">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Serviços disponíveis:</label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="checkBanho">
+                                    <label class="form-check-label" for="checkBanho">
+                                        <i class="fas fa-shower text-info me-1"></i> Banho
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="checkCorte">
+                                    <label class="form-check-label" for="checkCorte">
+                                        <i class="fas fa-cut text-warning me-1"></i> Corte de Cabelo
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info small">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Serviços adicionais colocam a pessoa no final da fila correspondente.
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" onclick="adicionarServicos()">
+                                    <i class="fas fa-plus me-1"></i> Adicionar Serviços
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="fecharServicos()">
+                                    <i class="fas fa-times me-1"></i> Cancelar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="servicosVazio" class="text-center py-3">
+                            <i class="fas fa-hand-pointer fa-2x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">
+                                Clique no botão "Serviços" ao lado de uma pessoa para adicionar banho ou corte
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Resumo do Dia -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>
+                            Resumo do Dia
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Café da Manhã</span>
+                                <span class="badge bg-success">22/24</span>
+                            </div>
+                            <div class="progress mb-3" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 92%"></div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Banho</span>
+                                <span class="badge bg-info">8/24</span>
+                            </div>
+                            <div class="progress mb-3" style="height: 8px;">
+                                <div class="progress-bar bg-info" style="width: 33%"></div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Corte de Cabelo</span>
+                                <span class="badge bg-warning">6/24</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-warning" style="width: 25%"></div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="small">
+                            <p class="mb-1">
+                                <i class="fas fa-clock me-1 text-muted"></i>
+                                <strong>Horário de pico:</strong> 8h - 10h
+                            </p>
+                            <p class="mb-1">
+                                <i class="fas fa-user-check me-1 text-muted"></i>
+                                <strong>Voluntário ativo:</strong> João Silva
+                            </p>
+                            <p class="mb-0">
+                                <i class="fas fa-sync-alt me-1 text-muted"></i>
+                                <strong>Última atualização:</strong> Agora mesmo
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal fade" id="modalConfirmacao" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Check-in Confirmado
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="mensagemConfirmacao"></p>
+                    <div class="alert alert-success">
+                        <i class="fas fa-info-circle me-2"></i>
+                        O check-in foi registrado com sucesso no sistema.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Fechar
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="irParaFilas()">
+                        <i class="fas fa-list-ol me-1"></i> Ver Filas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Scripts da página -->
+    <script>
+        // =========== DADOS MOCKADOS ===========
+        const pessoasMock = [
+            {
+                id: 1, nome: "Maria Silva Santos", cpf: "123.456.789-00", situacao: "comunidade",
+                ultimoCheckin: "Hoje 08:30", checkinHoje: true, cafeHoje: true, banho: false, corte: false
+            },
+            {
+                id: 2, nome: "João Pereira Oliveira", cpf: "987.654.321-00", situacao: "rua",
+                ultimoCheckin: "Ontem", checkinHoje: false, cafeHoje: false, banho: false, corte: false
+            },
+            {
+                id: 3, nome: "Ana Costa Ferreira", cpf: "456.789.123-00", situacao: "abrigo",
+                ultimoCheckin: "Hoje 09:15", checkinHoje: true, cafeHoje: true, banho: true, corte: false
+            },
+            {
+                id: 4, nome: "Carlos Alberto Mendes", cpf: null, situacao: "comunidade",
+                ultimoCheckin: "14/01", checkinHoje: false, cafeHoje: false, banho: false, corte: false
+            },
+            {
+                id: 5, nome: "Fernanda Lima Rodrigues", cpf: "789.123.456-00", situacao: "rua",
+                ultimoCheckin: "Hoje 10:00", checkinHoje: true, cafeHoje: true, banho: false, corte: true
+            },
+            {
+                id: 6, nome: "Roberto Almeida Souza", cpf: "321.654.987-00", situacao: "comunidade",
+                ultimoCheckin: "Ontem", checkinHoje: false, cafeHoje: false, banho: false, corte: false
+            },
+            {
+                id: 7, nome: "Patrícia Santos Gomes", cpf: "654.987.321-00", situacao: "abrigo",
+                ultimoCheckin: "Hoje 07:45", checkinHoje: true, cafeHoje: true, banho: true, corte: true
+            },
+            {
+                id: 8, nome: "Luiz Fernando Costa", cpf: "147.258.369-00", situacao: "rua",
+                ultimoCheckin: "13/01", checkinHoje: false, cafeHoje: false, banho: false, corte: false
+            },
+        ];
+
+        // =========== VARIÁVEIS GLOBAIS ===========
+        let pessoasFiltradas = [...pessoasMock];
+        let pessoasSelecionadas = new Set();
+        let pessoaParaServicos = null;
+        const itensPorPagina = 5;
+        let paginaAtual = 1;
+
+        // =========== FUNÇÕES PRINCIPAIS ===========
+
+        // Inicializar página
+        function inicializarPagina() {
+            // Verificar login
+            const usuario = JSON.parse(localStorage.getItem('usuario'));
+            if (!usuario) {
+                window.location.href = 'index.html';
+                return;
+            }
+            document.getElementById('userNameBusca').textContent = usuario.nome;
+
+            // Carregar dados
+            atualizarEstatisticas();
+            filtrarPessoas();
+
+            // Configurar busca com Select2 (se estiver disponível)
+            if ($ && $.fn.select2) {
+                $('#busca').select2({
+                    placeholder: "Digite o nome...",
+                    minimumInputLength: 2,
+                    allowClear: true
+                });
+            }
+        }
+
+        // Atualizar estatísticas
+        function atualizarEstatisticas() {
+            const totalCheckins = pessoasMock.filter(p => p.checkinHoje).length;
+            document.getElementById('totalPessoas').textContent = pessoasMock.length;
+            document.getElementById('checkinsHoje').textContent = totalCheckins;
+        }
+
+        // Filtrar pessoas
+        function filtrarPessoas() {
+            const termoBusca = document.getElementById('busca').value.toLowerCase();
+            const filtroSituacao = document.getElementById('filtroSituacao').value;
+
+            pessoasFiltradas = pessoasMock.filter(pessoa => {
+                // Filtro por nome (busca parcial)
+                const nomeMatch = !termoBusca ||
+                    pessoa.nome.toLowerCase().includes(termoBusca);
+
+                // Filtro por situação
+                const situacaoMatch = !filtroSituacao ||
+                    pessoa.situacao === filtroSituacao;
+
+                return nomeMatch && situacaoMatch;
+            });
+
+            paginaAtual = 1;
+            atualizarListaPessoas();
+            atualizarContagem();
+        }
+
+        // Atualizar lista de pessoas
+        function atualizarListaPessoas() {
+            const tbody = document.getElementById('listaPessoas');
+            const inicio = (paginaAtual - 1) * itensPorPagina;
+            const fim = inicio + itensPorPagina;
+            const pessoasPagina = pessoasFiltradas.slice(inicio, fim);
+
+            tbody.innerHTML = '';
+
+            if (pessoasPagina.length === 0) {
+                document.getElementById('mensagemVazia').classList.remove('d-none');
+                document.getElementById('tabelaPessoas').classList.add('d-none');
+                return;
+            }
+
+            document.getElementById('mensagemVazia').classList.add('d-none');
+            document.getElementById('tabelaPessoas').classList.remove('d-none');
+
+            pessoasPagina.forEach(pessoa => {
+                const tr = document.createElement('tr');
+                const estaSelecionada = pessoasSelecionadas.has(pessoa.id);
+                const temCheckinHoje = pessoa.checkinHoje;
+
+                tr.innerHTML = `
+                    <td>
+                        ${!temCheckinHoje ?
+                        `<input type="checkbox" class="form-check-input pessoa-checkbox" 
+                                    value="${pessoa.id}" ${estaSelecionada ? 'checked' : ''}
+                                    onchange="toggleSelecao(${pessoa.id})">` :
+                        '<i class="fas fa-check text-success"></i>'}
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="me-2">
+                                ${temCheckinHoje ?
+                        '<span class="badge bg-success badge-sm"><i class="fas fa-check"></i></span>' :
+                        '<span class="badge bg-secondary badge-sm"><i class="fas fa-clock"></i></span>'}
+                            </div>
+                            <div>
+                                <strong>${pessoa.nome}</strong>
+                                ${temCheckinHoje ?
+                        '<div class="small text-success"><i class="fas fa-coffee"></i> Check-in realizado</div>' : ''}
+                            </div>
+                        </div>
+                    </td>
+                    <td>${pessoa.cpf || '<span class="text-muted">-</span>'}</td>
+                    <td>
+                        <span class="badge ${getBadgeSituacao(pessoa.situacao)}">
+                            ${getTextoSituacao(pessoa.situacao)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="${temCheckinHoje ? 'text-success' : 'text-muted'}">
+                            ${pessoa.ultimoCheckin}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                            ${!temCheckinHoje ?
+                        `<button class="btn btn-outline-success" onclick="fazerCheckinRapido(${pessoa.id})"
+                                         title="Check-in rápido">
+                                    <i class="fas fa-check"></i>
+                                </button>` : ''}
+                            
+                            <button class="btn btn-outline-primary" onclick="abrirServicos(${pessoa.id})"
+                                    title="Adicionar serviços">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            
+                            <button class="btn btn-outline-info" onclick="verDetalhes(${pessoa.id})"
+                                    title="Ver detalhes">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+
+                if (temCheckinHoje) {
+                    tr.classList.add('table-success');
+                }
+
+                tbody.appendChild(tr);
+            });
+
+            atualizarPaginacao();
+        }
+
+        // Helper functions
+        function getBadgeSituacao(situacao) {
+            switch (situacao) {
+                case 'rua': return 'bg-danger';
+                case 'comunidade': return 'bg-success';
+                case 'abrigo': return 'bg-warning';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function getTextoSituacao(situacao) {
+            switch (situacao) {
+                case 'rua': return 'Rua';
+                case 'comunidade': return 'Comunidade';
+                case 'abrigo': return 'Abrigo';
+                default: return situacao;
+            }
+        }
+
+        // Paginação
+        function atualizarPaginacao() {
+            const totalPaginas = Math.ceil(pessoasFiltradas.length / itensPorPagina);
+
+            document.getElementById('paginaAtual').textContent = paginaAtual;
+            document.getElementById('totalPaginas').textContent = totalPaginas;
+
+            document.getElementById('btnAnterior').disabled = paginaAtual === 1;
+            document.getElementById('btnProximo').disabled = paginaAtual === totalPaginas;
+        }
+
+        function mudarPagina(direcao) {
+            const totalPaginas = Math.ceil(pessoasFiltradas.length / itensPorPagina);
+            const novaPagina = paginaAtual + direcao;
+
+            if (novaPagina >= 1 && novaPagina <= totalPaginas) {
+                paginaAtual = novaPagina;
+                atualizarListaPessoas();
+            }
+        }
+
+        // Contagem
+        function atualizarContagem() {
+            document.getElementById('contagemMostrando').textContent =
+                `${pessoasFiltradas.length} pessoa${pessoasFiltradas.length !== 1 ? 's' : ''}`;
+        }
+
+        // =========== FUNÇÕES DE SELEÇÃO ===========
+
+        function toggleSelecao(id) {
+            if (pessoasSelecionadas.has(id)) {
+                pessoasSelecionadas.delete(id);
+            } else {
+                // Verificar se já fez check-in hoje
+                const pessoa = pessoasMock.find(p => p.id === id);
+                if (pessoa && !pessoa.checkinHoje) {
+                    pessoasSelecionadas.add(id);
+                }
+            }
+            atualizarSelecionadas();
+        }
+
+        function selecionarTodos() {
+            const selectAll = document.getElementById('selectAll').checked;
+            pessoasSelecionadas.clear();
+
+            if (selectAll) {
+                pessoasFiltradas.forEach(pessoa => {
+                    if (!pessoa.checkinHoje) {
+                        pessoasSelecionadas.add(pessoa.id);
+                    }
+                });
+            }
+
+            // Atualizar checkboxes
+            document.querySelectorAll('.pessoa-checkbox').forEach(cb => {
+                cb.checked = selectAll;
+            });
+
+            atualizarSelecionadas();
+        }
+
+        function atualizarSelecionadas() {
+            const container = document.getElementById('selecionadasContainer');
+            const vazio = document.getElementById('nenhumaSelecionada');
+            const lista = document.getElementById('listaSelecionadas');
+            const contador = document.getElementById('contadorSelecionadas');
+
+            contador.textContent = pessoasSelecionadas.size;
+
+            if (pessoasSelecionadas.size > 0) {
+                container.classList.remove('d-none');
+                vazio.classList.add('d-none');
+
+                // Atualizar lista de selecionadas
+                lista.innerHTML = '';
+                pessoasSelecionadas.forEach(id => {
+                    const pessoa = pessoasMock.find(p => p.id === id);
+                    if (pessoa) {
+                        const div = document.createElement('div');
+                        div.className = 'd-flex justify-content-between align-items-center mb-2';
+                        div.innerHTML = `
+                            <span>${pessoa.nome}</span>
+                            <button class="btn btn-sm btn-outline-danger" 
+                                    onclick="removerSelecionada(${id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                        lista.appendChild(div);
+                    }
+                });
+            } else {
+                container.classList.add('d-none');
+                vazio.classList.remove('d-none');
+            }
+
+            // Atualizar checkbox "selecionar todos"
+            const todasSelecionaveis = pessoasFiltradas.filter(p => !p.checkinHoje);
+            const todasSelecionadas = todasSelecionaveis.every(p =>
+                pessoasSelecionadas.has(p.id));
+            document.getElementById('selectAll').checked =
+                todasSelecionaveis.length > 0 && todasSelecionadas;
+        }
+
+        function removerSelecionada(id) {
+            pessoasSelecionadas.delete(id);
+            // Atualizar checkbox da linha
+            const checkbox = document.querySelector(`.pessoa-checkbox[value="${id}"]`);
+            if (checkbox) checkbox.checked = false;
+            atualizarSelecionadas();
+        }
+
+        // =========== CHECK-IN ===========
+
+        function fazerCheckinRapido(id) {
+            const pessoa = pessoasMock.find(p => p.id === id);
+            if (!pessoa || pessoa.checkinHoje) return;
+
+            // Simular check-in
+            pessoa.checkinHoje = true;
+            pessoa.cafeHoje = true;
+            pessoa.ultimoCheckin = `Hoje ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+
+            // Mostrar confirmação
+            document.getElementById('mensagemConfirmacao').textContent =
+                `${pessoa.nome} recebeu check-in com café da manhã.`;
+
+            const modal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+            modal.show();
+
+            // Atualizar interface
+            atualizarEstatisticas();
+            filtrarPessoas();
+            if (pessoasSelecionadas.has(id)) {
+                pessoasSelecionadas.delete(id);
+                atualizarSelecionadas();
+            }
+        }
+
+        function fazerCheckinMultiplo() {
+            if (pessoasSelecionadas.size === 0) return;
+
+            const cafeParaTodos = document.getElementById('cafeTodos').checked;
+            const pessoasNomes = [];
+
+            pessoasSelecionadas.forEach(id => {
+                const pessoa = pessoasMock.find(p => p.id === id);
+                if (pessoa && !pessoa.checkinHoje) {
+                    pessoa.checkinHoje = true;
+                    pessoa.cafeHoje = cafeParaTodos;
+                    pessoa.ultimoCheckin = `Hoje ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+                    pessoasNomes.push(pessoa.nome);
+                }
+            });
+
+            // Mostrar confirmação
+            document.getElementById('mensagemConfirmacao').textContent =
+                `${pessoasSelecionadas.size} pessoa(s) receberam check-in${cafeParaTodos ? ' com café da manhã' : ''}.`;
+
+            const modal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+            modal.show();
+
+            // Limpar seleção
+            pessoasSelecionadas.clear();
+            atualizarSelecionadas();
+            atualizarEstatisticas();
+            filtrarPessoas();
+        }
+
+        function aplicarCafeATodos() {
+            // Esta função é acionada pelo toggle switch
+            // Apenas atualiza a interface se necessário
+        }
+
+        // =========== SERVIÇOS ADICIONAIS ===========
+
+        function abrirServicos(id) {
+            pessoaParaServicos = pessoasMock.find(p => p.id === id);
+            if (!pessoaParaServicos) return;
+
+            document.getElementById('nomePessoaServicos').textContent =
+                `Serviços para: ${pessoaParaServicos.nome}`;
+            document.getElementById('servicosContainer').classList.remove('d-none');
+            document.getElementById('servicosVazio').classList.add('d-none');
+
+            // Resetar campos
+            document.getElementById('numeroFicha').value = '';
+            document.getElementById('checkBanho').checked = false;
+            document.getElementById('checkCorte').checked = false;
+
+            // Rolar para o card
+            document.getElementById('cardServicos').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function adicionarServicos() {
+            if (!pessoaParaServicos) return;
+
+            const numeroFicha = document.getElementById('numeroFicha').value.trim();
+            const banho = document.getElementById('checkBanho').checked;
+            const corte = document.getElementById('checkCorte').checked;
+
+            if ((banho || corte) && !numeroFicha) {
+                alert('Por favor, informe o número da ficha para serviços adicionais.');
+                document.getElementById('numeroFicha').focus();
+                return;
+            }
+
+            // Atualizar pessoa
+            if (banho) pessoaParaServicos.banho = true;
+            if (corte) pessoaParaServicos.corte = true;
+
+            // Mostrar mensagem
+            let mensagem = `Serviços adicionados para ${pessoaParaServicos.nome}:`;
+            if (banho) mensagem += '\n• Banho';
+            if (corte) mensagem += '\n• Corte de cabelo';
+            mensagem += `\nFicha: ${numeroFicha}`;
+
+            alert(mensagem);
+
+            fecharServicos();
+            filtrarPessoas();
+        }
+
+        function fecharServicos() {
+            pessoaParaServicos = null;
+            document.getElementById('servicosContainer').classList.add('d-none');
+            document.getElementById('servicosVazio').classList.remove('d-none');
+        }
+
+        // =========== FUNÇÕES AUXILIARES ===========
+
+        function mostrarTodasPessoas() {
+            document.getElementById('busca').value = '';
+            document.getElementById('filtroSituacao').value = '';
+            filtrarPessoas();
+        }
+
+        function limparBusca() {
+            document.getElementById('busca').value = '';
+            filtrarPessoas();
+        }
+
+        function alternarVisualizacao() {
+            // Alternar entre tabela e cards (implementação futura)
+            alert('Visualização em cards será implementada em breve!');
+        }
+
+        function verDetalhes(id) {
+            const pessoa = pessoasMock.find(p => p.id === id);
+            if (pessoa) {
+                alert(`Detalhes de ${pessoa.nome}:\n\n` +
+                    `CPF: ${pessoa.cpf || 'Não informado'}\n` +
+                    `Situação: ${getTextoSituacao(pessoa.situacao)}\n` +
+                    `Último check-in: ${pessoa.ultimoCheckin}\n` +
+                    `Check-in hoje: ${pessoa.checkinHoje ? 'Sim' : 'Não'}\n` +
+                    `Café hoje: ${pessoa.cafeHoje ? 'Sim' : 'Não'}\n` +
+                    `Banho: ${pessoa.banho ? 'Sim' : 'Não'}\n` +
+                    `Corte: ${pessoa.corte ? 'Sim' : 'Não'}`);
+            }
+        }
+
+        function irParaFilas() {
+            window.location.href = 'filas.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('usuario');
+            window.location.href = 'index.html';
+        }
+
+        // =========== INICIALIZAÇÃO ===========
+        document.addEventListener('DOMContentLoaded', inicializarPagina);
+    </script>
+
+    <!-- Estilos adicionais inline -->
+    <style>
+        .badge-sm {
+            font-size: 0.7em;
+            padding: 0.2em 0.4em;
+        }
+
+        .table-success {
+            background-color: rgba(25, 135, 84, 0.05) !important;
+        }
+
+        .card-hover {
+            transition: transform 0.2s;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-group-sm>.btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .progress {
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            border-radius: 10px;
+        }
+
+        #listaSelecionadas {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+</body>
+
+</html>

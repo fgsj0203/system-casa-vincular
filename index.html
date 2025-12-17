@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa Vincular - Login</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+
+<body class="login-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card login-card shadow-lg">
+                    <div class="login-header">
+                        <div class="mb-3">
+                            <i class="fas fa-hands-helping fa-3x"></i>
+                        </div>
+                        <h2 class="mb-2">Casa Vincular</h2>
+                        <p class="mb-0 opacity-75">Sistema de Atendimento</p>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope me-2"></i>E-mail
+                                </label>
+                                <input type="email" class="form-control" id="email" placeholder="seu@email.com"
+                                    required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock me-2"></i>Senha
+                                </label>
+                                <input type="password" class="form-control" id="password" placeholder="••••••••"
+                                    required>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Entrar no Sistema
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="mt-4 text-center">
+                            <div class="alert alert-info mb-0" role="alert">
+                                <small>
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Para teste use:<br>
+                                    <strong>Admin:</strong> admin@casavincular.com<br>
+                                    <strong>Voluntário:</strong> voluntario@casavincular.com<br>
+                                    Senha: 123456
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 text-white">
+                    <small class="opacity-75">
+                        Sistema desenvolvido para apoio à comunidade
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts para simulação (REMOVER DEPOIS) -->
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Simulação de login
+            if ((email === 'admin@casavincular.com' || email === 'voluntario@casavincular.com') && password === '123456') {
+                // Salvar no localStorage
+                const tipo = email.includes('admin') ? 'admin' : 'voluntario';
+                localStorage.setItem('usuario', JSON.stringify({
+                    email: email,
+                    tipo: tipo,
+                    nome: tipo === 'admin' ? 'Administrador' : 'Voluntário'
+                }));
+
+                // Redirecionar
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Credenciais inválidas! Use os dados de teste fornecidos.');
+            }
+        });
+
+        // Preencher automaticamente para teste
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('email').value = 'admin@casavincular.com';
+            document.getElementById('password').value = '123456';
+        });
+    </script>
+</body>
+
+</html>

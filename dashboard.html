@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Casa Vincular</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-hands-helping me-2"></i>
+                <span>Casa Vincular</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">
+                            <i class="fas fa-home me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="busca-checkin.html">
+                            <i class="fas fa-search me-1"></i> Check-in
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="filas.html">
+                            <i class="fas fa-list-ol me-1"></i> Filas
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="navbar-nav align-items-center">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i>
+                            <span id="userName">Administrador</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="admin.html" id="adminMenuItem">
+                                    <i class="fas fa-cog me-2"></i> Administração
+                                </a></li>
+                            <li><a class="dropdown-item" href="relatorios.html">
+                                    <i class="fas fa-chart-bar me-2"></i> Relatórios
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Sair
+                                </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container mt-4">
+        <!-- Dashboard Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-1">Dashboard</h1>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-calendar-day me-1"></i>
+                            Hoje: <span id="dataHoje">15/01/2024</span>
+                        </p>
+                    </div>
+                    <div>
+                        <a href="cadastro-pessoa.html" class="btn btn-success">
+                            <i class="fas fa-user-plus me-2"></i> Nova Pessoa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards de Estatísticas -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-2x text-primary"></i>
+                        </div>
+                        <h3 class="card-title" id="totalCheckins">24</h3>
+                        <p class="card-text text-muted">Check-ins Hoje</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-coffee fa-2x text-success"></i>
+                        </div>
+                        <h3 class="card-title" id="totalCafe">22</h3>
+                        <p class="card-text text-muted">Café da Manhã</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-shower fa-2x text-info"></i>
+                        </div>
+                        <h3 class="card-title" id="totalBanho">8</h3>
+                        <p class="card-text text-muted">Banho</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-cut fa-2x text-warning"></i>
+                        </div>
+                        <h3 class="card-title" id="totalCorte">6</h3>
+                        <p class="card-text text-muted">Corte de Cabelo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Acesso Rápido e Status -->
+        <div class="row g-4">
+            <!-- Acesso Rápido -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-bolt text-warning me-2"></i>
+                            Acesso Rápido
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <a href="busca-checkin.html" class="card card-hover text-decoration-none">
+                                    <div class="card-body text-center p-4">
+                                        <i class="fas fa-search fa-2x text-primary mb-3"></i>
+                                        <h5 class="card-title">Buscar Pessoa</h5>
+                                        <p class="card-text text-muted small">
+                                            Busque por nome ou CPF para fazer check-in
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-md-6">
+                                <a href="cadastro-pessoa.html" class="card card-hover text-decoration-none">
+                                    <div class="card-body text-center p-4">
+                                        <i class="fas fa-user-plus fa-2x text-success mb-3"></i>
+                                        <h5 class="card-title">Cadastrar Pessoa</h5>
+                                        <p class="card-text text-muted small">
+                                            Cadastre uma nova pessoa no sistema
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-md-6">
+                                <a href="filas.html" class="card card-hover text-decoration-none">
+                                    <div class="card-body text-center p-4">
+                                        <i class="fas fa-list-ol fa-2x text-info mb-3"></i>
+                                        <h5 class="card-title">Gerenciar Filas</h5>
+                                        <p class="card-text text-muted small">
+                                            Controle as filas de banho e corte de cabelo
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-md-6">
+                                <a href="admin.html" class="card card-hover text-decoration-none" id="adminCard">
+                                    <div class="card-body text-center p-4">
+                                        <i class="fas fa-cog fa-2x text-secondary mb-3"></i>
+                                        <h5 class="card-title">Administração</h5>
+                                        <p class="card-text text-muted small">
+                                            Configure serviços e gerencie o sistema
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status do Sistema -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Status do Sistema
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6 class="d-flex justify-content-between align-items-center">
+                                <span>Serviços Ativos</span>
+                                <span class="badge bg-success">HOJE</span>
+                            </h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Café da Manhã
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check"></i> Ativo
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Banho
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check"></i> Ativo
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Corte de Cabelo
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check"></i> Ativo
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h6>Últimas Atividades</h6>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item px-0 py-2">
+                                    <small class="text-muted">10:30</small>
+                                    <p class="mb-0">Maria Silva fez check-in</p>
+                                </div>
+                                <div class="list-group-item px-0 py-2">
+                                    <small class="text-muted">10:15</small>
+                                    <p class="mb-0">João Santos entrou na fila do banho</p>
+                                </div>
+                                <div class="list-group-item px-0 py-2">
+                                    <small class="text-muted">09:45</small>
+                                    <p class="mb-0">Ana Oliveira completou corte de cabelo</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5 py-3 bg-light border-top">
+        <div class="container text-center">
+            <small class="text-muted">
+                Sistema Casa Vincular © 2024 - Desenvolvido com ❤️ para a comunidade
+            </small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts de simulação -->
+    <script>
+        // Verificar se usuário está logado
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario) {
+            window.location.href = 'index.html';
+        }
+
+        // Atualizar dados na tela
+        document.getElementById('userName').textContent = usuario.nome;
+        document.getElementById('dataHoje').textContent = new Date().toLocaleDateString('pt-BR');
+
+        // Esconder itens de admin se não for admin
+        if (usuario.tipo !== 'admin') {
+            document.getElementById('adminMenuItem').style.display = 'none';
+            document.getElementById('adminCard').style.display = 'none';
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('usuario');
+            window.location.href = 'index.html';
+        }
+
+        // Atualizar estatísticas (dados fictícios)
+        function atualizarEstatisticas() {
+            // Em uma implementação real, isso viria do backend
+            document.getElementById('totalCheckins').textContent = '24';
+            document.getElementById('totalCafe').textContent = '22';
+            document.getElementById('totalBanho').textContent = '8';
+            document.getElementById('totalCorte').textContent = '6';
+        }
+
+        // Inicializar
+        atualizarEstatisticas();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Pessoa - Casa Vincular</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Input Mask -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+</head>
+
+<body>
+    <!-- Navbar (igual às outras páginas) -->
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-hands-helping me-2"></i>
+                <span>Casa Vincular</span>
+            </a>
+
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-light" href="dashboard.html">
+                    <i class="fas fa-arrow-left me-1"></i> Voltar
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <!-- Cabeçalho -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="h3 mb-1">
+                            <i class="fas fa-user-plus text-primary me-2"></i>
+                            Cadastrar Pessoa
+                        </h1>
+                        <p class="text-muted mb-0">
+                            Preencha os dados da pessoa para cadastro no sistema
+                        </p>
+                    </div>
+                    <div>
+                        <a href="busca-checkin.html" class="btn btn-outline-primary">
+                            <i class="fas fa-search me-2"></i> Ir para Busca
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card do Formulário -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-id-card me-2"></i>
+                            Dados Pessoais
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <form id="formCadastro">
+                            <!-- Nome e CPF -->
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <label for="nome" class="form-label">
+                                        <i class="fas fa-user me-1"></i> Nome Completo *
+                                    </label>
+                                    <input type="text" class="form-control" id="nome"
+                                        placeholder="Digite o nome completo" required>
+                                    <div class="form-text">
+                                        Informe o nome completo da pessoa
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="cpf" class="form-label">
+                                        <i class="fas fa-id-card me-1"></i> CPF (opcional)
+                                    </label>
+                                    <input type="text" class="form-control" id="cpf" placeholder="000.000.000-00">
+                                    <div class="form-text">
+                                        Apenas números, será formatado automaticamente
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gênero, Situação e Faixa Etária -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="genero" class="form-label">
+                                        <i class="fas fa-venus-mars me-1"></i> Gênero
+                                    </label>
+                                    <select class="form-select" id="genero">
+                                        <option value="">Selecione...</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="feminino">Feminino</option>
+                                        <option value="outro">Outro</option>
+                                        <option value="prefiro_nao_informar">Prefiro não informar</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="situacao" class="form-label">
+                                        <i class="fas fa-home me-1"></i> Situação
+                                    </label>
+                                    <select class="form-select" id="situacao">
+                                        <option value="">Selecione...</option>
+                                        <option value="rua">Em situação de rua</option>
+                                        <option value="comunidade">Comunidade local</option>
+                                        <option value="abrigo">Abrigo temporário</option>
+                                        <option value="outro">Outra situação</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="faixaEtaria" class="form-label">
+                                        <i class="fas fa-child me-1"></i> Faixa Etária
+                                    </label>
+                                    <select class="form-select" id="faixaEtaria">
+                                        <option value="">Selecione...</option>
+                                        <option value="crianca">Criança (0-12 anos)</option>
+                                        <option value="adolescente">Adolescente (13-17)</option>
+                                        <option value="adulto">Adulto (18-59)</option>
+                                        <option value="idoso">Idoso (60+)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Data de Nascimento (opcional) -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="dataNascimento" class="form-label">
+                                        <i class="fas fa-birthday-cake me-1"></i> Data de Nascimento (opcional)
+                                    </label>
+                                    <input type="date" class="form-control" id="dataNascimento">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="telefone" class="form-label">
+                                        <i class="fas fa-phone me-1"></i> Telefone (opcional)
+                                    </label>
+                                    <input type="tel" class="form-control" id="telefone" placeholder="(11) 99999-9999">
+                                </div>
+                            </div>
+
+                            <!-- Observações -->
+                            <div class="mb-4">
+                                <label for="observacoes" class="form-label">
+                                    <i class="fas fa-sticky-note me-1"></i> Observações
+                                </label>
+                                <textarea class="form-control" id="observacoes" rows="3"
+                                    placeholder="Alguma observação importante..."></textarea>
+                                <div class="form-text">
+                                    Informações adicionais como alergias, necessidades especiais, etc.
+                                </div>
+                            </div>
+
+                            <!-- Foto (opcional - para versão futura) -->
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="fas fa-camera me-1"></i> Foto (futura implementação)
+                                </label>
+                                <div class="border rounded p-3 text-center bg-light">
+                                    <i class="fas fa-user-circle fa-3x text-muted mb-2"></i>
+                                    <p class="text-muted small mb-0">
+                                        Funcionalidade de foto será implementada em breve
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Botões -->
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                <div>
+                                    <span class="text-muted small">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Campos com * são obrigatórios
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <button type="button" class="btn btn-outline-secondary me-2"
+                                        onclick="limparFormulario()">
+                                        <i class="fas fa-eraser me-1"></i> Limpar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Salvar Cadastro
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Mensagem de Sucesso (oculta inicialmente) -->
+                <div id="mensagemSucesso" class="alert alert-success mt-3 d-none" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-check-circle fa-2x me-3"></i>
+                        <div>
+                            <h5 class="alert-heading mb-1">Cadastro realizado com sucesso!</h5>
+                            <p class="mb-0" id="mensagemDetalhes"></p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-outline-success me-2" onclick="cadastrarOutro()">
+                            <i class="fas fa-user-plus me-1"></i> Cadastrar outra pessoa
+                        </button>
+                        <button type="button" class="btn btn-success" onclick="irParaCheckin()">
+                            <i class="fas fa-search me-1"></i> Fazer check-in desta pessoa
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cadastros Recentes (Preview) -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>
+                            Últimos Cadastros
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>CPF</th>
+                                        <th>Gênero</th>
+                                        <th>Situação</th>
+                                        <th>Cadastrado em</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaRecentes">
+                                    <!-- Dados serão preenchidos via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center">
+                            <a href="busca-checkin.html" class="btn btn-link">
+                                <i class="fas fa-search me-1"></i> Ver todas as pessoas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5 py-3 bg-light border-top">
+        <div class="container text-center">
+            <small class="text-muted">
+                Sistema Casa Vincular © 2024
+            </small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts da página -->
+    <script>
+        // Verificar se usuário está logado
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario) {
+            window.location.href = 'index.html';
+        }
+
+        // Máscaras para CPF e Telefone
+        $(document).ready(function () {
+            $('#cpf').inputmask('999.999.999-99');
+            $('#telefone').inputmask('(99) 99999-9999');
+        });
+
+        // Dados mockados para últimos cadastros
+        const ultimosCadastros = [
+            {
+                id: 1,
+                nome: "Maria Silva Santos",
+                cpf: "123.456.789-00",
+                genero: "feminino",
+                situacao: "comunidade",
+                dataCadastro: "15/01/2024 09:30"
+            },
+            {
+                id: 2,
+                nome: "João Pereira Oliveira",
+                cpf: "987.654.321-00",
+                genero: "masculino",
+                situacao: "rua",
+                dataCadastro: "14/01/2024 14:15"
+            },
+            {
+                id: 3,
+                nome: "Ana Costa Ferreira",
+                cpf: "456.789.123-00",
+                genero: "feminino",
+                situacao: "abrigo",
+                dataCadastro: "14/01/2024 11:45"
+            },
+            {
+                id: 4,
+                nome: "Carlos Alberto Mendes",
+                cpf: null,
+                genero: "masculino",
+                situacao: "comunidade",
+                dataCadastro: "13/01/2024 16:20"
+            }
+        ];
+
+        // Preencher tabela de últimos cadastros
+        function preencherUltimosCadastros() {
+            const tbody = document.getElementById('tabelaRecentes');
+            tbody.innerHTML = '';
+
+            ultimosCadastros.forEach(pessoa => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${pessoa.nome}</strong></td>
+                    <td>${pessoa.cpf || '<span class="text-muted">Não informado</span>'}</td>
+                    <td>
+                        <span class="badge ${pessoa.genero === 'masculino' ? 'bg-info' : 'bg-pink'}">
+                            ${pessoa.genero === 'masculino' ? 'Masculino' :
+                        pessoa.genero === 'feminino' ? 'Feminino' : pessoa.genero}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${pessoa.situacao === 'rua' ? 'bg-danger' :
+                        pessoa.situacao === 'comunidade' ? 'bg-success' : 'bg-warning'}">
+                            ${pessoa.situacao === 'rua' ? 'Rua' :
+                        pessoa.situacao === 'comunidade' ? 'Comunidade' : 'Abrigo'}
+                        </span>
+                    </td>
+                    <td>${pessoa.dataCadastro}</td>
+                `;
+                tr.style.cursor = 'pointer';
+                tr.onclick = () => selecionarPessoa(pessoa.id);
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Simular seleção de pessoa
+        function selecionarPessoa(id) {
+            const pessoa = ultimosCadastros.find(p => p.id === id);
+            if (pessoa) {
+                alert(`Pessoa selecionada: ${pessoa.nome}\nClique em "Ir para Busca" para fazer check-in.`);
+            }
+        }
+
+        // Limpar formulário
+        function limparFormulario() {
+            if (confirm('Deseja limpar todos os campos do formulário?')) {
+                document.getElementById('formCadastro').reset();
+            }
+        }
+
+        // Cadastrar outra pessoa
+        function cadastrarOutro() {
+            document.getElementById('mensagemSucesso').classList.add('d-none');
+            document.getElementById('formCadastro').reset();
+            document.getElementById('nome').focus();
+        }
+
+        // Ir para check-in
+        function irParaCheckin() {
+            // Em uma implementação real, passaria o ID da pessoa
+            window.location.href = 'busca-checkin.html';
+        }
+
+        // Manipular envio do formulário
+        document.getElementById('formCadastro').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Coletar dados do formulário
+            const dados = {
+                nome: document.getElementById('nome').value.trim(),
+                cpf: document.getElementById('cpf').value.replace(/\D/g, '') || null,
+                genero: document.getElementById('genero').value || null,
+                situacao: document.getElementById('situacao').value || null,
+                faixaEtaria: document.getElementById('faixaEtaria').value || null,
+                dataNascimento: document.getElementById('dataNascimento').value || null,
+                telefone: document.getElementById('telefone').value || null,
+                observacoes: document.getElementById('observacoes').value.trim() || null,
+                dataCadastro: new Date().toLocaleString('pt-BR')
+            };
+
+            // Validação básica
+            if (!dados.nome) {
+                alert('Por favor, informe o nome completo.');
+                document.getElementById('nome').focus();
+                return;
+            }
+
+            // Simular salvamento (substituir por Firebase depois)
+            console.log('Dados para salvar:', dados);
+
+            // Mostrar mensagem de sucesso
+            document.getElementById('mensagemDetalhes').textContent =
+                `${dados.nome} foi cadastrado(a) com sucesso no sistema.`;
+            document.getElementById('mensagemSucesso').classList.remove('d-none');
+
+            // Adicionar à lista de últimos cadastros (mock)
+            ultimosCadastros.unshift({
+                id: ultimosCadastros.length + 1,
+                nome: dados.nome,
+                cpf: dados.cpf ? dados.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : null,
+                genero: dados.genero,
+                situacao: dados.situacao,
+                dataCadastro: dados.dataCadastro
+            });
+
+            // Atualizar tabela
+            preencherUltimosCadastros();
+
+            // Rolar para a mensagem de sucesso
+            document.getElementById('mensagemSucesso').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Estilos adicionais
+        const style = document.createElement('style');
+        style.textContent = `
+            .bg-pink { background-color: #e83e8c !important; }
+            .card-hover:hover { transform: translateY(-5px); transition: transform 0.3s; }
+            tr:hover { background-color: rgba(52, 152, 219, 0.05) !important; }
+        `;
+        document.head.appendChild(style);
+
+        // Inicializar
+        preencherUltimosCadastros();
+
+        // Focar no campo nome ao carregar
+        document.getElementById('nome').focus();
+    </script>
+</body>
+
+</html>
