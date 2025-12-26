@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Casa Vincular</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-hands-helping me-2"></i>
+                <span>Casa Vincular</span>
+            </a>
+
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Menu
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="dashboard.html">
+                                <i class="fas fa-home me-2"></i> Dashboard
+                            </a></li>
+                        <li><a class="dropdown-item" href="admin.html">
+                                <i class="fas fa-cog me-2"></i> Administração
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i> Sair
+                            </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container-fluid mt-3">
+        <!-- Cabeçalho -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-1">
+                            <i class="fas fa-chart-bar text-primary me-2"></i>
+                            Relatórios e Estatísticas
+                        </h1>
+                        <p class="text-muted mb-0">
+                            Análise detalhada do atendimento e serviços prestados
+                        </p>
+                    </div>
+                    <div>
+                        <button class="btn btn-success me-2" onclick="exportarRelatorio()">
+                            <i class="fas fa-file-export me-1"></i> Exportar
+                        </button>
+                        <button class="btn btn-primary" onclick="imprimirRelatorio()">
+                            <i class="fas fa-print me-1"></i> Imprimir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-filter me-2"></i>
+                            Filtros do Relatório
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <form id="formFiltros">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label for="dataInicio" class="form-label">Data Inicial</label>
+                                    <input type="date" class="form-control" id="dataInicio" value="2024-01-01">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="dataFim" class="form-label">Data Final</label>
+                                    <input type="date" class="form-control" id="dataFim" value="2024-01-15">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="tipoServico" class="form-label">Tipo de Serviço</label>
+                                    <select class="form-select" id="tipoServico">
+                                        <option value="">Todos os serviços</option>
+                                        <option value="cafe">Café da Manhã</option>
+                                        <option value="banho">Banho</option>
+                                        <option value="corte">Corte de Cabelo</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="faixaEtaria" class="form-label">Faixa Etária</label>
+                                    <select class="form-select" id="faixaEtaria">
+                                        <option value="">Todas as faixas</option>
+                                        <option value="crianca">Criança</option>
+                                        <option value="adolescente">Adolescente</option>
+                                        <option value="adulto">Adulto</option>
+                                        <option value="idoso">Idoso</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <!-- <div class="col-md-4">
+                                    <label for="situacao" class="form-label">Situação</label>
+                                    <select class="form-select" id="situacao">
+                                        <option value="">Todas as situações</option>
+                                        <option value="rua">Em situação de rua</option>
+                                        <option value="comunidade">Comunidade local</option>
+                                        <option value="abrigo">Abrigo temporário</option>
+                                    </select>
+                                </div> -->
+
+                                <!-- <div class="col-md-4">
+                                    <label for="genero" class="form-label">Gênero</label>
+                                    <select class="form-select" id="genero">
+                                        <option value="">Todos os gêneros</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="feminino">Feminino</option>
+                                        <option value="outro">Outro</option>
+                                    </select>
+                                </div> -->
+
+                                <div class="col-md-4">
+                                    <label class="form-label d-block">&nbsp;</label>
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-search me-1"></i> Gerar Relatório
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumo Estatístico -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-2x text-primary"></i>
+                        </div>
+                        <h3 id="totalAtendimentos">1.245</h3>
+                        <p class="text-muted mb-0">Total de Atendimentos</p>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up"></i> 12% vs período anterior
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-user-friends fa-2x text-success"></i>
+                        </div>
+                        <h3 id="pessoasUnicas">287</h3>
+                        <p class="text-muted mb-0">Pessoas Únicas</p>
+                        <small class="text-info">Média de 4,3 atendimentos/pessoa</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-shower fa-2x text-info"></i>
+                        </div>
+                        <h3 id="totalBanhos">348</h3>
+                        <p class="text-muted mb-0">Banhos Realizados</p>
+                        <small class="text-warning">28% dos atendimentos</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-cut fa-2x text-warning"></i>
+                        </div>
+                        <h3 id="totalCortes">215</h3>
+                        <p class="text-muted mb-0">Cortes Realizados</p>
+                        <small class="text-danger">17% dos atendimentos</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-line me-2"></i>
+                            Evolução Diária de Atendimentos
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="graficoEvolucao" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>
+                            Distribuição por Serviço
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="graficoDistribuicao" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mais Gráficos -->
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            Atendimentos por Situação
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="graficoSituacao" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-venus-mars me-2"></i>
+                            Distribuição por Gênero
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="graficoGenero" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Exportação Avançada -->
+    <div class="modal fade" id="modalExportacao" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-export me-2"></i>
+                        Exportação Avançada
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Formato de Exportação</label>
+                                <select class="form-select" id="formatoExport">
+                                    <option value="csv">CSV (Excel)</option>
+                                    <option value="pdf">PDF</option>
+                                    <option value="json">JSON</option>
+                                    <option value="xml">XML</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Codificação</label>
+                                <select class="form-select" id="codificacao">
+                                    <option value="utf8">UTF-8 (Recomendado)</option>
+                                    <option value="latin1">Latin-1</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Campos para Incluir</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="campoData" checked>
+                                    <label class="form-check-label" for="campoData">Data</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="campoNome" checked>
+                                    <label class="form-check-label" for="campoNome">Nome</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="campoCpf" checked>
+                                    <label class="form-check-label" for="campoCpf">CPF</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="campoGenero" checked>
+                                    <label class="form-check-label" for="campoGenero">Gênero</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="campoSituacao" checked>
+                                    <label class="form-check-label" for="campoSituacao">Situação</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="campoServicos" checked>
+                                    <label class="form-check-label" for="campoServicos">Serviços</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="campoFicha" checked>
+                                    <label class="form-check-label" for="campoFicha">Ficha</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="campoHorario" checked>
+                                    <label class="form-check-label" for="campoHorario">Horário</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="campoObservacoes">
+                                    <label class="form-check-label" for="campoObservacoes">Observações</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nomeArquivo" class="form-label">Nome do Arquivo</label>
+                        <input type="text" class="form-control" id="nomeArquivo" value="relatorio_casa_vincular">
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        A exportação incluirá todos os dados que correspondem aos filtros aplicados.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="confirmarExportacao()">
+                        <i class="fas fa-download me-1"></i> Iniciar Exportação
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts da página -->
+    <script>
+        // =========== DADOS MOCKADOS ===========
+        const dadosRelatorio = [
+            {
+                data: '2024-01-15', nome: 'Maria Silva Santos', cpf: '123.456.789-00',
+                genero: 'Feminino', situacao: 'Comunidade', servicos: 'Café, Banho',
+                ficha: '012', horario: '08:30'
+            },
+            {
+                data: '2024-01-15', nome: 'João Pereira Oliveira', cpf: '987.654.321-00',
+                genero: 'Masculino', situacao: 'Rua', servicos: 'Café, Corte',
+                ficha: '013', horario: '08:45'
+            },
+            {
+                data: '2024-01-15', nome: 'Ana Costa Ferreira', cpf: '456.789.123-00',
+                genero: 'Feminino', situacao: 'Abrigo', servicos: 'Café, Banho, Corte',
+                ficha: '015', horario: '09:15'
+            },
+            {
+                data: '2024-01-14', nome: 'Carlos Alberto Mendes', cpf: null,
+                genero: 'Masculino', situacao: 'Comunidade', servicos: 'Café',
+                ficha: '008', horario: '10:30'
+            },
+            {
+                data: '2024-01-14', nome: 'Fernanda Lima Rodrigues', cpf: '789.123.456-00',
+                genero: 'Feminino', situacao: 'Rua', servicos: 'Café, Corte',
+                ficha: '009', horario: '11:15'
+            },
+            {
+                data: '2024-01-13', nome: 'Roberto Almeida Souza', cpf: '321.654.987-00',
+                genero: 'Masculino', situacao: 'Comunidade', servicos: 'Café',
+                ficha: '005', horario: '09:45'
+            },
+            {
+                data: '2024-01-13', nome: 'Patrícia Santos Gomes', cpf: '654.987.321-00',
+                genero: 'Feminino', situacao: 'Abrigo', servicos: 'Café, Banho',
+                ficha: '006', horario: '14:20'
+            },
+            {
+                data: '2024-01-12', nome: 'Luiz Fernando Costa', cpf: '147.258.369-00',
+                genero: 'Masculino', situacao: 'Rua', servicos: 'Café',
+                ficha: '003', horario: '16:10'
+            }
+        ];
+
+        // =========== INICIALIZAÇÃO ===========
+        document.addEventListener('DOMContentLoaded', function () {
+            // Verificar login e permissões
+            const usuario = JSON.parse(localStorage.getItem('usuario'));
+            if (!usuario) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Inicializar gráficos e dados
+            inicializarGraficos();
+            carregarDadosDetalhados();
+
+            // Configurar filtros
+            document.getElementById('formFiltros').addEventListener('submit', function (e) {
+                e.preventDefault();
+                aplicarFiltros();
+            });
+
+            // Configurar data atual como padrão para data final
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('dataFim').value = hoje;
+        });
+
+        // =========== GRÁFICOS ===========
+        let graficoEvolucao, graficoDistribuicao, graficoSituacao, graficoGenero;
+
+        function inicializarGraficos() {
+            // Gráfico de Evolução Diária
+            const ctxEvolucao = document.getElementById('graficoEvolucao').getContext('2d');
+            graficoEvolucao = new Chart(ctxEvolucao, {
+                type: 'line',
+                data: {
+                    labels: ['01/01', '02/01', '03/01', '04/01', '05/01', '06/01', '07/01',
+                        '08/01', '09/01', '10/01', '11/01', '12/01', '13/01', '14/01', '15/01'],
+                    datasets: [{
+                        label: 'Café da Manhã',
+                        data: [15, 18, 22, 20, 25, 28, 30, 32, 28, 26, 24, 22, 20, 18, 24],
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Banho',
+                        data: [5, 6, 8, 7, 9, 10, 12, 11, 9, 8, 7, 6, 8, 7, 8],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Corte de Cabelo',
+                        data: [3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 6, 5, 6],
+                        borderColor: '#f39c12',
+                        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Atendimentos por Dia'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Quantidade'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Distribuição
+            const ctxDistribuicao = document.getElementById('graficoDistribuicao').getContext('2d');
+            graficoDistribuicao = new Chart(ctxDistribuicao, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Café da Manhã', 'Banho', 'Corte de Cabelo'],
+                    datasets: [{
+                        data: [1245, 348, 215],
+                        backgroundColor: [
+                            '#27ae60',
+                            '#3498db',
+                            '#f39c12'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribuição por Serviço'
+                        }
+                    }
+                }
+            });
+
+            // Gráfico por Situação
+            const ctxSituacao = document.getElementById('graficoSituacao').getContext('2d');
+            graficoSituacao = new Chart(ctxSituacao, {
+                type: 'bar',
+                data: {
+                    labels: ['Rua', 'Comunidade', 'Abrigo'],
+                    datasets: [{
+                        label: 'Quantidade',
+                        data: [543, 482, 220],
+                        backgroundColor: [
+                            '#e74c3c',
+                            '#2ecc71',
+                            '#f1c40f'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Atendimentos por Situação'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Gráfico por Gênero
+            const ctxGenero = document.getElementById('graficoGenero').getContext('2d');
+            graficoGenero = new Chart(ctxGenero, {
+                type: 'pie',
+                data: {
+                    labels: ['Masculino', 'Feminino', 'Outro'],
+                    datasets: [{
+                        data: [702, 518, 25],
+                        backgroundColor: [
+                            '#3498db',
+                            '#e83e8c',
+                            '#95a5a6'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribuição por Gênero'
+                        }
+                    }
+                }
+            });
+        }
+
+        // =========== DADOS DETALHADOS ===========
+        function carregarDadosDetalhados() {
+            const tbody = document.getElementById('dadosDetalhados');
+            tbody.innerHTML = '';
+
+            dadosRelatorio.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${formatarData(item.data)}</td>
+                    <td><strong>${item.nome}</strong></td>
+                    <td>${item.cpf || '<span class="text-muted">-</span>'}</td>
+                    <td>
+                        <span class="badge ${item.genero === 'Feminino' ? 'bg-pink' : 'bg-info'}">
+                            ${item.genero}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${getBadgeSituacao(item.situacao)}">
+                            ${item.situacao}
+                        </span>
+                    </td>
+                    <td>
+                        ${item.servicos.split(', ').map(servico =>
+                    `<span class="badge ${getBadgeServico(servico)} me-1">${servico}</span>`
+                ).join('')}
+                    </td>
+                    <td>${item.ficha}</td>
+                    <td>${item.horario}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // =========== FILTROS ===========
+        function aplicarFiltros() {
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFim = document.getElementById('dataFim').value;
+            const tipoServico = document.getElementById('tipoServico').value;
+            const faixaEtaria = document.getElementById('faixaEtaria').value;
+            const situacao = document.getElementById('situacao').value;
+            const genero = document.getElementById('genero').value;
+
+            // Simular aplicação de filtros
+            console.log('Aplicando filtros:', {
+                dataInicio, dataFim, tipoServico, faixaEtaria, situacao, genero
+            });
+
+            // Atualizar estatísticas
+            atualizarEstatisticas();
+
+            // Atualizar dados detalhados
+            carregarDadosDetalhados();
+
+            mostrarMensagem('Relatório atualizado com os filtros aplicados.', 'success');
+        }
+
+        function atualizarEstatisticas() {
+            // Simular atualização baseada em filtros
+            document.getElementById('totalAtendimentos').textContent = '1.245';
+            document.getElementById('pessoasUnicas').textContent = '287';
+            document.getElementById('totalBanhos').textContent = '348';
+            document.getElementById('totalCortes').textContent = '215';
+        }
+
+        // =========== EXPORTAÇÃO ===========
+        function exportarRelatorio() {
+            const modal = new bootstrap.Modal(document.getElementById('modalExportacao'));
+            modal.show();
+        }
+
+        function confirmarExportacao() {
+            const formato = document.getElementById('formatoExport').value;
+            const nomeArquivo = document.getElementById('nomeArquivo').value || 'relatorio_casa_vincular';
+
+            // Simular exportação
+            console.log('Exportando em formato:', formato);
+
+            // Gerar conteúdo CSV de exemplo
+            if (formato === 'csv') {
+                exportarCSV();
+            } else if (formato === 'pdf') {
+                exportarPDF();
+            } else {
+                // JSON ou XML
+                const dados = {
+                    relatorio: 'Casa Vincular',
+                    periodo: `${document.getElementById('dataInicio').value} a ${document.getElementById('dataFim').value}`,
+                    totalAtendimentos: 1245,
+                    dados: dadosRelatorio
+                };
+
+                const dataStr = formato === 'json'
+                    ? JSON.stringify(dados, null, 2)
+                    : converterParaXML(dados);
+
+                const dataUri = formato === 'json'
+                    ? 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr)
+                    : 'data:application/xml;charset=utf-8,' + encodeURIComponent(dataStr);
+
+                const extensao = formato === 'json' ? 'json' : 'xml';
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', `${nomeArquivo}.${extensao}`);
+                linkElement.click();
+            }
+
+            // Fechar modal
+            bootstrap.Modal.getInstance(document.getElementById('modalExportacao')).hide();
+
+            mostrarMensagem(`Exportação em ${formato.toUpperCase()} iniciada!`, 'success');
+        }
+
+        function exportarCSV() {
+            // Criar cabeçalho CSV
+            let csv = 'Data,Nome,CPF,Gênero,Situação,Serviços,Ficha,Horário\n';
+
+            // Adicionar dados
+            dadosRelatorio.forEach(item => {
+                csv += `"${item.data}","${item.nome}","${item.cpf || ''}","${item.genero}",`;
+                csv += `"${item.situacao}","${item.servicos}","${item.ficha}","${item.horario}"\n`;
+            });
+
+            // Criar link de download
+            const dataUri = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', 'relatorio_casa_vincular.csv');
+            linkElement.click();
+        }
+
+        function exportarPDF() {
+            // Simular exportação PDF (em um sistema real, usaria uma biblioteca como jsPDF)
+            alert('Exportação para PDF simulada. Em um sistema real, esta função geraria um PDF com os dados do relatório.');
+
+            // Em um sistema real, você usaria:
+            // const { jsPDF } = window.jspdf;
+            // const doc = new jsPDF();
+            // doc.text('Relatório Casa Vincular', 20, 20);
+            // doc.save('relatorio.pdf');
+        }
+
+        function imprimirRelatorio() {
+            window.print();
+        }
+
+        // =========== FUNÇÕES AUXILIARES ===========
+        function formatarData(dataISO) {
+            const [ano, mes, dia] = dataISO.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function getBadgeSituacao(situacao) {
+            switch (situacao) {
+                case 'Rua': return 'bg-danger';
+                case 'Comunidade': return 'bg-success';
+                case 'Abrigo': return 'bg-warning';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function getBadgeServico(servico) {
+            switch (servico.trim()) {
+                case 'Café': return 'bg-success';
+                case 'Banho': return 'bg-info';
+                case 'Corte': return 'bg-warning';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function converterParaXML(dados) {
+            // Simples conversão para XML
+            let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+            xml += '<relatorio>\n';
+            xml += `  <titulo>${dados.relatorio}</titulo>\n`;
+            xml += `  <periodo>${dados.periodo}</periodo>\n`;
+            xml += `  <totalAtendimentos>${dados.totalAtendimentos}</totalAtendimentos>\n`;
+            xml += '  <dados>\n';
+
+            dados.dados.forEach(item => {
+                xml += '    <atendimento>\n';
+                xml += `      <data>${item.data}</data>\n`;
+                xml += `      <nome>${item.nome}</nome>\n`;
+                xml += `      <cpf>${item.cpf || ''}</cpf>\n`;
+                xml += `      <genero>${item.genero}</genero>\n`;
+                xml += `      <situacao>${item.situacao}</situacao>\n`;
+                xml += `      <servicos>${item.servicos}</servicos>\n`;
+                xml += `      <ficha>${item.ficha}</ficha>\n`;
+                xml += `      <horario>${item.horario}</horario>\n`;
+                xml += '    </atendimento>\n';
+            });
+
+            xml += '  </dados>\n';
+            xml += '</relatorio>';
+
+            return xml;
+        }
+
+        function mostrarMensagem(texto, tipo) {
+            const mensagemDiv = document.createElement('div');
+            mensagemDiv.className = `alert alert-${tipo} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+            mensagemDiv.style.zIndex = '1050';
+            mensagemDiv.style.maxWidth = '350px';
+
+            const icon = tipo === 'success' ? 'fa-check-circle' :
+                tipo === 'danger' ? 'fa-exclamation-circle' : 'fa-info-circle';
+
+            mensagemDiv.innerHTML = `
+                <i class="fas ${icon} me-2"></i>
+                ${texto}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(mensagemDiv);
+
+            setTimeout(() => {
+                if (mensagemDiv.parentNode) {
+                    mensagemDiv.remove();
+                }
+            }, 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('usuario');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <!-- Estilos para impressão -->
+    <style>
+        @media print {
+
+            .navbar,
+            .card-header button,
+            .btn,
+            .pagination,
+            #formFiltros,
+            .modal {
+                display: none !important;
+            }
+
+            .card {
+                border: 1px solid #000 !important;
+                box-shadow: none !important;
+            }
+
+            .card-header {
+                background-color: #fff !important;
+                color: #000 !important;
+                border-bottom: 2px solid #000 !important;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                color: #000 !important;
+            }
+
+            .badge {
+                border: 1px solid #000 !important;
+                background-color: #fff !important;
+                color: #000 !important;
+            }
+
+            canvas {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+        }
+
+        /* Estilos gerais */
+        .bg-pink {
+            background-color: #e83e8c !important;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        .table th {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            font-weight: 500;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .alert-dismissible {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</body>
+
+</html>

@@ -101,14 +101,15 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label for="filtroSituacao" class="form-label">
+                                <!-- <label for="filtroSituacao" class="form-label">
                                     <i class="fas fa-filter me-1"></i> Filtrar por situação
-                                </label>
-                                <select class="form-select" id="filtroSituacao" onchange="filtrarPessoas()">
-                                    <option value="">Todas as situações</option>
+                                </label> -->
+                                <select class="" id="filtroSituacao" onchange="filtrarPessoas()">
+                                    <!-- class = "form-select" antes do id-->
+                                    <!-- <option value="">Todas as situações</option>
                                     <option value="rua">Em situação de rua</option>
                                     <option value="comunidade">Comunidade local</option>
-                                    <option value="abrigo">Abrigo temporário</option>
+                                    <option value="abrigo">Abrigo temporário</option> -->
                                 </select>
                             </div>
 
@@ -148,10 +149,10 @@
                                                 onchange="selecionarTodos()">
                                         </th>
                                         <th>Nome</th>
-                                        <th>CPF</th>
+                                        <!-- <th>CPF</th>
                                         <th>Situação</th>
                                         <th>Último Check-in</th>
-                                        <th width="150">Ações</th>
+                                        <th width="150">Ações</th> -->
                                     </tr>
                                 </thead>
                                 <tbody id="listaPessoas">
@@ -197,109 +198,6 @@
 
             <!-- Coluna Direita - Check-in e Serviços -->
             <div class="col-lg-4">
-                <!-- Card de Check-in Rápido -->
-                <div class="card mb-4">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-bolt me-2"></i>
-                            Check-in Rápido
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="selecionadasContainer" class="mb-3 d-none">
-                            <h6 class="mb-2">
-                                <i class="fas fa-user-check me-1"></i>
-                                Pessoas selecionadas: <span id="contadorSelecionadas">0</span>
-                            </h6>
-                            <div id="listaSelecionadas" class="mb-3"></div>
-
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-mug-hot me-1"></i> Café da Manhã
-                                </label>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="cafeTodos" checked
-                                        onchange="aplicarCafeATodos()">
-                                    <label class="form-check-label" for="cafeTodos">
-                                        Marcar café da manhã para todos
-                                    </label>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-success w-100" onclick="fazerCheckinMultiplo()">
-                                <i class="fas fa-check-double me-1"></i>
-                                Confirmar Check-in para Selecionados
-                            </button>
-                        </div>
-
-                        <div id="nenhumaSelecionada" class="text-center py-3">
-                            <i class="fas fa-mouse-pointer fa-2x text-muted mb-3"></i>
-                            <p class="text-muted mb-0">
-                                Selecione pessoas na lista ao lado para fazer check-in em lote
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card de Serviços Adicionais -->
-                <div class="card mb-4" id="cardServicos">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-concierge-bell me-2"></i>
-                            Serviços Adicionais
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="servicosContainer" class="d-none">
-                            <h6 id="nomePessoaServicos" class="mb-3"></h6>
-
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-ticket-alt me-1"></i> Número da Ficha *
-                                </label>
-                                <input type="text" class="form-control" id="numeroFicha" placeholder="Ex: 001"
-                                    maxlength="10">
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Serviços disponíveis:</label>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="checkBanho">
-                                    <label class="form-check-label" for="checkBanho">
-                                        <i class="fas fa-shower text-info me-1"></i> Banho
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkCorte">
-                                    <label class="form-check-label" for="checkCorte">
-                                        <i class="fas fa-cut text-warning me-1"></i> Corte de Cabelo
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="alert alert-info small">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Serviços adicionais colocam a pessoa no final da fila correspondente.
-                            </div>
-
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-primary" onclick="adicionarServicos()">
-                                    <i class="fas fa-plus me-1"></i> Adicionar Serviços
-                                </button>
-                                <button class="btn btn-outline-secondary" onclick="fecharServicos()">
-                                    <i class="fas fa-times me-1"></i> Cancelar
-                                </button>
-                            </div>
-                        </div>
-
-                        <div id="servicosVazio" class="text-center py-3">
-                            <i class="fas fa-hand-pointer fa-2x text-muted mb-3"></i>
-                            <p class="text-muted mb-0">
-                                Clique no botão "Serviços" ao lado de uma pessoa para adicionar banho ou corte
-                            </p>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Card de Resumo do Dia -->
                 <div class="card">
@@ -851,9 +749,9 @@
             const pessoa = pessoasMock.find(p => p.id === id);
             if (pessoa) {
                 alert(`Detalhes de ${pessoa.nome}:\n\n` +
-                    `CPF: ${pessoa.cpf || 'Não informado'}\n` +
-                    `Situação: ${getTextoSituacao(pessoa.situacao)}\n` +
-                    `Último check-in: ${pessoa.ultimoCheckin}\n` +
+                    // `CPF: ${pessoa.cpf || 'Não informado'}\n` +
+                    // `Situação: ${getTextoSituacao(pessoa.situacao)}\n` +
+                    // `Último check-in: ${pessoa.ultimoCheckin}\n` +
                     `Check-in hoje: ${pessoa.checkinHoje ? 'Sim' : 'Não'}\n` +
                     `Café hoje: ${pessoa.cafeHoje ? 'Sim' : 'Não'}\n` +
                     `Banho: ${pessoa.banho ? 'Sim' : 'Não'}\n` +
